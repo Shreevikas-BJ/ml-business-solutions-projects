@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# ---- DATA RULES ----
+
+# Ignore ALL raw data
+subscription_value_brain/data/raw/
+
+# Ignore ALL processed data by default...
+subscription_value_brain/data/processed/*
+
+# ...EXCEPT the small demo file used by the app
+!subscription_value_brain/data/processed/master_users.parquet

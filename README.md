@@ -1,5 +1,4 @@
-📘 README.md — ml-business-solutions-projects
-🚀 ML Business Solutions Projects
+*🚀 ML Business Solutions Projects*
 
 A collection of real-world, end-to-end Machine Learning systems designed for solving practical business problems across customer analytics, marketing, operations, and decision intelligence.
 

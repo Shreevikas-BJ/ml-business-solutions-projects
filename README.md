@@ -4,6 +4,6 @@ A collection of real-world, end-to-end Machine Learning systems designed for sol
 
 This repository demonstrates your capability to build production-ready ML pipelines, deploy interactive applications, and deliver business impact with data science.
 
-| Project Name                 | Description                                                                                                     | Tech Stack                                                | Live Demo                                                                       |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| **Subscription Value Brain** | End-to-end customer value engine combining Churn + CLV + Uplift Modeling to decide who to target with discounts | Python, Scikit-Learn, Streamlit, XGBoost, Uplift Modeling | https://shree-subscription-value-brainsrcappstreamlit-app-jaqobs.streamlit.app/ |
+| Project Name                 | Description                                                                                                     | Tech Stack                                                | Live Demo                                      |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| **Subscription Value Brain** | End-to-end customer value engine combining Churn + CLV + Uplift Modeling to decide who to target with discounts | Python, Scikit-Learn, Streamlit, XGBoost, Uplift Modeling | https://subcription-value-brain.streamlit.app/ |

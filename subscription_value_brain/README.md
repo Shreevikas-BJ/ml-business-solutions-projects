@@ -1,10 +1,10 @@
-📊 Subscription Value Brain
+***📊 Subscription Value Brain***
 
 End-to-End Churn, CLV & Uplift Modeling System
 
 A production-style data science project that shows how subscription businesses (Netflix/Spotify/SaaS-like) can reduce churn and optimize marketing spend by targeting the right customers with the right offers.
 
-🚀 What This Project Does
+**🚀 What This Project Does**
 
   The system answers four key business questions:
 
@@ -18,8 +18,9 @@ A production-style data science project that shows how subscription businesses (
 
   The final output is an interactive Streamlit dashboard that simulates real marketing decisions under budget constraints.
 
-🧠 Modeling Approach (High Level)
-  1️⃣ Churn Prediction
+**🧠 Modeling Approach**
+
+*1️⃣ Churn Prediction*
 
   Models: Logistic Regression, XGBoost
 
@@ -27,7 +28,7 @@ A production-style data science project that shows how subscription businesses (
 
   Output: p_churn (probability of churn)
 
-  2️⃣ Customer Lifetime Value (CLV)
+  *2️⃣ Customer Lifetime Value (CLV)*
 
   Features: RFM (Recency, Frequency, Monetary)
 
@@ -37,7 +38,7 @@ A production-style data science project that shows how subscription businesses (
 
   Output: clv (expected future value)
 
-  3️⃣ Uplift Modeling
+  *3️⃣ Uplift Modeling*
 
   Two-model approach:
 
@@ -53,12 +54,12 @@ A production-style data science project that shows how subscription businesses (
 
   Persuadable, Sure Thing, Lost Cause, Do-Not-Disturb
 
-  4️⃣ Targeting Score
+  *4️⃣ Targeting Score*
     target_score = p_churn × clv × uplift_positive
 
   Ranks customers by expected retained revenue.
 
-📊 Streamlit Dashboard
+**📊 Streamlit Dashboard**
 
   The app provides:
 
@@ -72,7 +73,7 @@ A production-style data science project that shows how subscription businesses (
 
   Separate Methodology page explaining model choices
 
-🛠️ Tech Stack
+**🛠️ Tech Stack**
 
     Python, Pandas, NumPy
 
@@ -84,7 +85,7 @@ A production-style data science project that shows how subscription businesses (
 
     Streamlit (deployment)
 
-🎯 Why This Project Matters
+**🎯 Why This Project Matters**
 
   This project demonstrates:
 
@@ -98,6 +99,6 @@ A production-style data science project that shows how subscription businesses (
 
   Clear communication of impact
 
-👤 Author
+**👤 Author**
 
   Shreevikas Jagadish

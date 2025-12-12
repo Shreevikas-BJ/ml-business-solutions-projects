@@ -111,7 +111,7 @@ def main():
     with col_btn:
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("📘 Methodology"):
-            st.switch_page("pages/1_Methodology.py")
+            st.switch_page("1_Methodology.py")
 
     # ---------- Sidebar ----------
     st.sidebar.header("Targeting Strategy")

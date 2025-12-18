@@ -1,0 +1,5 @@
+{
+  "model_version": "baseline_v1",
+  "type": "baseline_last7_mean",
+  "notes": "Predicts each future day as mean of last 7 observed days."
+}

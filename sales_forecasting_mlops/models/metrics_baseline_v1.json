@@ -1,0 +1,7 @@
+{
+  "run_id": "e8a7cfab-f09d-486e-bb0b-4abbe7f8c0b9",
+  "model_version": "baseline_v1",
+  "avg_mae": 1622.0275014310603,
+  "avg_mape": 887.0266813430202,
+  "n_windows": 82
+}

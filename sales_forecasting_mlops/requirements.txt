@@ -1,0 +1,11 @@
+pyspark                      
+pandas               
+pyarrow            
+numpy               
+scikit-learn          
+xgboost       
+snowflake-connector-python   
+python-dotenv        
+pyyaml          
+matplotlib  
+streamlit      

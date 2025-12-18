@@ -90,20 +90,6 @@ Metrics written back to Snowflake for monitoring and comparison
 
       Language: Python
 
-**Project Structure**
-                  sales_forecasting_mlops/
-                  ├─ dashboards/            # Streamlit app
-                  ├─ src/
-                  │  ├─ etl/                # Ingest + feature engineering
-                  │  ├─ train/              # Baseline & XGBoost training
-                  │  ├─ forecast/           # Batch forecasting
-                  │  ├─ monitoring/         # Metrics & drift checks
-                  │  └─ common/             # Snowflake & config helpers
-                  ├─ sql/                   # Warehouse & table setup
-                  ├─ models/                # Versioned model artifacts
-                  ├─ data/                  # Raw + sample outputs
-                  ├─ run_pipeline.py        # One-command pipeline runner
-                  └─ requirements.txt
 
 **Run the Pipeline (Local)**
 python run_pipeline.py
@@ -167,5 +153,6 @@ Shreevikas Bangalore Jagadish
 Master’s in Information Technology & Management (Data & Analytics)
 Illinois Institute of Technology
 GitHub: https://github.com/Shreevikas-BJ
+
 
 

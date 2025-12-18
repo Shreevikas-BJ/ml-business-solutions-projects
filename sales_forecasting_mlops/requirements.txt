@@ -8,5 +8,6 @@ snowflake-connector-python
 python-dotenv        
 pyyaml          
 matplotlib  
-python-3.12
+python>=3.12
 streamlit      
+

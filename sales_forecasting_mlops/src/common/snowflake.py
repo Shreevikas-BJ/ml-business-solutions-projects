@@ -1,35 +1,24 @@
 import snowflake.connector
-from snowflake.connector.pandas_tools import write_pandas
-from src.common.config import SNOWFLAKE_CFG
 import pandas as pd
+from src.common.config import SNOWFLAKE_CFG
 
-def get_conn(set_context: bool = True):
-    conn = snowflake.connector.connect(
+def get_conn():
+    kwargs = dict(
         account=SNOWFLAKE_CFG["account"],
         user=SNOWFLAKE_CFG["user"],
         password=SNOWFLAKE_CFG["password"],
+        warehouse=SNOWFLAKE_CFG["warehouse"],
+        database=SNOWFLAKE_CFG["database"],
+        schema=SNOWFLAKE_CFG["schema"],
         role=SNOWFLAKE_CFG["role"],
     )
 
-    if set_context:
-        with conn.cursor() as cur:
-            # quote identifiers to be safe
-            cur.execute(f'USE WAREHOUSE "{SNOWFLAKE_CFG["warehouse"]}"')
-            cur.execute(f'USE DATABASE "{SNOWFLAKE_CFG["database"]}"')
-            cur.execute(f'USE SCHEMA "{SNOWFLAKE_CFG["schema"]}"')
+    # If provided, force the exact host (fixes 404 / wrong endpoint)
+    if SNOWFLAKE_CFG.get("host"):
+        kwargs["host"] = SNOWFLAKE_CFG["host"]
 
-    return conn
-
-def exec_sql(sql: str, set_context: bool = True):
-    with get_conn(set_context=set_context) as conn:
-        with conn.cursor() as cur:
-            cur.execute(sql)
-
-def write_df(df, table_name: str):
-    with get_conn(set_context=True) as conn:
-        return write_pandas(conn, df, table_name)
+    return snowflake.connector.connect(**kwargs)
 
 def read_sql_df(sql: str) -> pd.DataFrame:
     with get_conn() as conn:
         return pd.read_sql(sql, conn)
-

@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from datetime import date, timedelta
+from datetime import timedelta
 import sys
 import os
 
@@ -9,25 +9,64 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-
-from src.common.snowflake import read_sql_df
-
 st.set_page_config(page_title="Sales Forecasting Dashboard", layout="wide")
-
 st.title("📈 Sales Forecasting MLOps Dashboard (PySpark + Snowflake + XGBoost)")
 st.caption("Reads FEATURES / FORECASTS / METRICS_MONITORING from Snowflake")
 
+# ---------- Secrets presence check (SAFE) ----------
+# This does NOT print secret values. It only checks if keys exist.
+required_keys = [
+    "SNOWFLAKE_ACCOUNT",
+    "SNOWFLAKE_USER",
+    "SNOWFLAKE_PASSWORD",
+    "SNOWFLAKE_ROLE",
+    "SNOWFLAKE_WAREHOUSE",
+    "SNOWFLAKE_DATABASE",
+    "SNOWFLAKE_SCHEMA",
+]
+
+# On local machine you may use .env instead, so don't hard-fail if st.secrets is empty locally.
+# On Streamlit Cloud, these should exist in Manage App → Settings → Secrets.
+missing_in_secrets = []
+try:
+    missing_in_secrets = [k for k in required_keys if k not in st.secrets]
+except Exception:
+    # st.secrets might not be available in some local contexts
+    missing_in_secrets = []
+
+# If running on Streamlit Cloud and secrets are missing, show friendly message
+if os.getenv("STREAMLIT_SERVER_RUNNING") == "true" and missing_in_secrets:
+    st.error("❌ Missing Snowflake secrets in Streamlit Cloud.")
+    st.info(
+        "Go to **Manage app → Settings → Secrets** and add these keys:\n\n"
+        + ", ".join(missing_in_secrets)
+    )
+    st.stop()
+
+# ---------- Import Snowflake helper with friendly error ----------
+try:
+    from src.common.snowflake import read_sql_df
+except Exception as e:
+    st.error("❌ Failed to import Snowflake connector / helpers.")
+    st.info(
+        "Common causes:\n"
+        "- requirements.txt not detected by Streamlit Cloud\n"
+        "- snowflake-connector-python not installed\n"
+        "- secrets missing/misconfigured\n\n"
+        "Check **Manage app → Logs** for the exact error."
+    )
+    st.exception(e)
+    st.stop()
+
 # ---------- Sidebar controls ----------
 st.sidebar.header("Controls")
-
 series_id = st.sidebar.text_input("SERIES_ID", value="GLOBAL")
-days_history = st.sidebar.slider("History window (days)", min_value=30, max_value=365, value=180, step=30)
-future_days = st.sidebar.slider("Future forecast window (days)", min_value=7, max_value=60, value=14, step=7)
-
+days_history = st.sidebar.slider("History window (days)", 30, 365, 180, 30)
+future_days = st.sidebar.slider("Future forecast window (days)", 7, 60, 14, 7)
 show_baseline = st.sidebar.checkbox("Show baseline forecasts", value=True)
 show_xgb = st.sidebar.checkbox("Show XGBoost forecasts", value=True)
 
-# Models (must match your pipeline model_version strings)
+# Model versions (must match your pipeline)
 BASELINE_VERSION = "baseline_v1"
 XGB_VERSION = "xgb_v1"
 MONITOR_VERSION = "monitor_v1"
@@ -78,18 +117,31 @@ def load_metrics() -> pd.DataFrame:
 
 
 # ---------- Load data ----------
-actuals = load_actuals(series_id)
+try:
+    actuals = load_actuals(series_id)
+except Exception as e:
+    st.error("❌ Could not query Snowflake. (Connection/auth/network issue)")
+    st.info(
+        "Checklist:\n"
+        "- Verify **SNOWFLAKE_ACCOUNT** format (ORG-ACCOUNT, not URL)\n"
+        "- Confirm user/password are correct\n"
+        "- Confirm warehouse/db/schema names match\n"
+        "- Ensure Streamlit Cloud Secrets are saved\n\n"
+        "See **Manage app → Logs** for full details."
+    )
+    st.exception(e)
+    st.stop()
 
 if actuals.empty:
     st.error(f"No actuals found for SERIES_ID='{series_id}' in FEATURES.")
     st.stop()
 
 last_actual_date = actuals["DS"].max().date()
-start_hist = (last_actual_date - timedelta(days=days_history))
+start_hist = last_actual_date - timedelta(days=days_history)
 
 actuals_view = actuals[actuals["DS"].dt.date >= start_hist].copy()
 
-# Forecast horizon dates we want to visualize
+# Forecast horizon
 fcst_start = last_actual_date + timedelta(days=1)
 fcst_end = last_actual_date + timedelta(days=future_days)
 
@@ -105,15 +157,15 @@ if show_baseline:
         st.sidebar.warning("No baseline forecasts found in FORECASTS table.")
 
 if show_xgb:
-    xgb = load_forecasts(series_id, XGB_VERSION)
-    if not xgb.empty:
-        xgb = xgb[(xgb["DS"].dt.date >= fcst_start) & (xgb["DS"].dt.date <= fcst_end)]
-        xgb = xgb.rename(columns={"YHAT": f"YHAT_{XGB_VERSION}"})
-        fcst_frames.append(xgb[["DS", f"YHAT_{XGB_VERSION}"]])
+    xgb_df = load_forecasts(series_id, XGB_VERSION)
+    if not xgb_df.empty:
+        xgb_df = xgb_df[(xgb_df["DS"].dt.date >= fcst_start) & (xgb_df["DS"].dt.date <= fcst_end)]
+        xgb_df = xgb_df.rename(columns={"YHAT": f"YHAT_{XGB_VERSION}"})
+        fcst_frames.append(xgb_df[["DS", f"YHAT_{XGB_VERSION}"]])
     else:
         st.sidebar.warning("No XGBoost forecasts found in FORECASTS table.")
 
-# Combine forecast frames on DS
+# Combine forecast frames
 if fcst_frames:
     fcst_view = fcst_frames[0]
     for f in fcst_frames[1:]:
@@ -129,16 +181,13 @@ col1, col2 = st.columns([2, 1])
 
 with col1:
     st.subheader("Actuals + Forecasts (Next N Days)")
-    # build chart dataframe
     chart_df = actuals_view.rename(columns={"Y": "ACTUAL"}).set_index("DS")[["ACTUAL"]]
 
     if not fcst_view.empty:
-        fcst_idx = fcst_view.set_index("DS")
-        chart_df = chart_df.join(fcst_idx, how="outer")
+        chart_df = chart_df.join(fcst_view.set_index("DS"), how="outer")
 
     st.line_chart(chart_df)
-
-    st.caption(f"Actuals shown from {start_hist} to {last_actual_date}. Forecast horizon: {fcst_start} to {fcst_end}.")
+    st.caption(f"Actuals: {start_hist} → {last_actual_date} | Forecast: {fcst_start} → {fcst_end}")
 
 with col2:
     st.subheader("Quick stats")
@@ -150,7 +199,7 @@ with col2:
     if not fcst_view.empty:
         st.dataframe(fcst_view.tail(20), use_container_width=True)
     else:
-        st.info("No forecast rows found for the selected horizon. Run `python src/forecast/01_batch_forecast.py` first.")
+        st.info("No forecast rows found for this horizon. Run the forecast job first.")
 
 st.divider()
 
@@ -159,12 +208,10 @@ st.subheader("Backtest Metrics Summary (MAE / MAPE)")
 if metrics.empty:
     st.info("No rows found in METRICS_MONITORING yet. Run backtests first.")
 else:
-    # Filter to this series if present
     m = metrics.copy()
     if "SERIES_ID" in m.columns:
         m = m[m["SERIES_ID"] == series_id]
 
-    # Summary by model_version (excluding monitor rows)
     summary = (
         m[m["MODEL_VERSION"].isin([BASELINE_VERSION, XGB_VERSION])]
         .groupby("MODEL_VERSION")[["MAE", "MAPE"]]
@@ -172,7 +219,6 @@ else:
         .reset_index()
         .sort_values("MODEL_VERSION")
     )
-
     st.dataframe(summary, use_container_width=True)
 
     st.subheader("Recent metric rows (latest 50)")
@@ -182,7 +228,7 @@ st.divider()
 
 st.subheader("Monitoring Rows (if available)")
 if not metrics.empty:
-    mon = metrics[(metrics["MODEL_VERSION"] == MONITOR_VERSION)]
+    mon = metrics[metrics["MODEL_VERSION"] == MONITOR_VERSION]
     if mon.empty:
         st.info("No monitoring rows yet (normal if no overlap between forecasts and actuals).")
     else:

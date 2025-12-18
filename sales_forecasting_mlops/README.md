@@ -15,13 +15,13 @@ End-to-end pipeline covering data ingestion → feature engineering → modeling
 
 Key ideas:
 
-Use PySpark for scalable ETL and time-series feature engineering
+      Use PySpark for scalable ETL and time-series feature engineering
 
-Persist features, forecasts, and metrics in Snowflake
+      Persist features, forecasts, and metrics in Snowflake
 
-Compare baseline heuristics vs ML models (XGBoost)
+      Compare baseline heuristics vs ML models (XGBoost)
 
-Serve results via an interactive Streamlit dashboard
+      Serve results via an interactive Streamlit dashboard
 
 **Architecture**
 Raw CSV Data
@@ -44,51 +44,51 @@ Streamlit Dashboard
 
 **Models**
 
-Baseline: Last-week average (strong heuristic benchmark)
+      Baseline: Last-week average (strong heuristic benchmark)
 
-ML Model: XGBoost (industry-standard for tabular forecasting)
+      ML Model: XGBoost (industry-standard for tabular forecasting)
 
-Models are versioned and stored as artifacts (models/xgb_v1.json, etc.).
+      Models are versioned and stored as artifacts (models/xgb_v1.json, etc.).
 
 **Evaluation**
 
-Rolling backtests
+      Rolling backtests
 
 Metrics:
 
-MAE (Mean Absolute Error)
+      MAE (Mean Absolute Error)
 
-MAPE (Mean Absolute Percentage Error)
+      MAPE (Mean Absolute Percentage Error)
 
 Metrics written back to Snowflake for monitoring and comparison
 
 **Dashboard**
 
-Interactive Streamlit app reading directly from Snowflake:
+      Interactive Streamlit app reading directly from Snowflake:
 
-Actual vs Forecast (Baseline vs XGBoost)
+      Actual vs Forecast (Baseline vs XGBoost)
 
-Future forecast horizon (N days)
+      Future forecast horizon (N days)
 
-Backtest metric summaries
+      Backtest metric summaries
 
-Monitoring / drift metrics
+      Monitoring / drift metrics
 
-👉 Live Demo: (https://sales-forecasting-mlops.streamlit.app/)
+-> Live Demo: (https://sales-forecasting-mlops.streamlit.app/)
 
 **Tech Stack**
 
-Data Engineering: PySpark
+      Data Engineering: PySpark
 
-Data Warehouse: Snowflake (free trial)
+      Data Warehouse: Snowflake (free trial)
 
-Modeling: XGBoost, Pandas
+      Modeling: XGBoost, Pandas
 
-MLOps: Versioned artifacts, batch pipelines, monitoring
+      MLOps: Versioned artifacts, batch pipelines, monitoring
 
-Visualization: Streamlit
+      Visualization: Streamlit
 
-Language: Python
+      Language: Python
 
 **Project Structure**
 sales_forecasting_mlops/
@@ -111,19 +111,19 @@ python run_pipeline.py
 
 This will:
 
-Ingest and clean raw sales data
+      Ingest and clean raw sales data
 
-Generate time-series features using PySpark
+      Generate time-series features using PySpark
 
-Write features to Snowflake
+      Write features to Snowflake
 
-Train baseline and XGBoost models
+      Train baseline and XGBoost models
 
-Run rolling backtests
+      Run rolling backtests
 
-Generate batch forecasts
+      Generate batch forecasts
 
-Log monitoring metrics
+      Log monitoring metrics
 
 **Configuration**
 
@@ -133,13 +133,13 @@ Cloud deployment: Streamlit Community Cloud Secrets
 
 Secrets include:
 
-SNOWFLAKE_ACCOUNT
-SNOWFLAKE_USER
-SNOWFLAKE_PASSWORD
-SNOWFLAKE_ROLE
-SNOWFLAKE_WAREHOUSE
-SNOWFLAKE_DATABASE
-SNOWFLAKE_SCHEMA
+      SNOWFLAKE_ACCOUNT
+      SNOWFLAKE_USER
+      SNOWFLAKE_PASSWORD
+      SNOWFLAKE_ROLE
+      SNOWFLAKE_WAREHOUSE
+      SNOWFLAKE_DATABASE
+      SNOWFLAKE_SCHEMA
 
 **Why This Project Matters**
 
@@ -167,3 +167,4 @@ Shreevikas Bangalore Jagadish
 Master’s in Information Technology & Management (Data & Analytics)
 Illinois Institute of Technology
 GitHub: https://github.com/Shreevikas-BJ
+

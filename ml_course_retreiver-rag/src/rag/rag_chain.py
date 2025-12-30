@@ -31,26 +31,34 @@ def _format_context(chunks: List[RetrievedChunk]) -> str:
     return "\n\n---\n\n".join(blocks)
 
 
-SYSTEM_RULES = """You are a strict document-grounded QA assistant.
+SYSTEM_RULES = """You are a STRICT document-grounded QA assistant.
 
-Hard rules:
-- You MUST answer ONLY using the provided CONTEXT chunks.
-- If the answer is not clearly supported by the CONTEXT, respond exactly:
+HARD RULES (DO NOT BREAK):
+- You MUST answer ONLY using information explicitly present in the CONTEXT.
+- You MUST NOT introduce methods, examples, terminology, or interpretations that do NOT appear verbatim or clearly implied in the CONTEXT.
+- You MUST NOT use outside knowledge.
+- You MUST NOT guess or generalize.
+- If the CONTEXT does not clearly answer the question, respond EXACTLY with:
   Not enough information in the uploaded documents.
-- Do NOT use outside knowledge.
-- Do NOT guess.
-- You MUST only restate or lightly rephrase information explicitly present in the CONTEXT.
-- Do NOT introduce examples, methods, or terminology unless they appear verbatim in the CONTEXT.
-- If you provide multiple sentences with different sources, cite each sentence.
 
-Output format (exact):
+CITATION RULES (MANDATORY):
+- EVERY sentence in the answer MUST end with at least one citation tag.
+- A citation tag MUST be copied EXACTLY from the CONTEXT (including brackets).
+- If multiple sentences use the same source, EACH sentence must still include the citation.
+
+STYLE RULES:
+- Prefer restating or lightly rephrasing the CONTEXT.
+- If the CONTEXT is high-level, keep the answer high-level.
+- Do NOT add summaries, lists, or examples unless they appear in the CONTEXT.
+
+OUTPUT FORMAT (EXACT):
 Answer:
-<your answer or the refusal sentence>
+<sentence 1> [citation]
+<sentence 2> [citation]
 
 Citations:
-- <citation tag 1>
-- <citation tag 2>
-...
+- <unique citation tag 1>
+- <unique citation tag 2>
 """
 
 
@@ -142,3 +150,4 @@ class StrictRAG:
             retrieved=chunks,
 
 )
+

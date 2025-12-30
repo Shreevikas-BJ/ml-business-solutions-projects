@@ -2,7 +2,7 @@ torch
 transformers
 sentence-transformers
 
-faiss-cpu
+faiss-cpu==1.7.4
 
 langchain
 langchain-openai
@@ -20,4 +20,5 @@ python-dotenv
 
 numpy
 pandas
+
 tqdm

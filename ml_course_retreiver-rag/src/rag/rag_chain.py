@@ -39,7 +39,8 @@ Hard rules:
   Not enough information in the uploaded documents.
 - Do NOT use outside knowledge.
 - Do NOT guess.
-- Include citations for every key claim using the bracketed citation tags exactly as shown in CONTEXT.
+- You MUST only restate or lightly rephrase information explicitly present in the CONTEXT.
+- Do NOT introduce examples, methods, or terminology unless they appear verbatim in the CONTEXT.
 - If you provide multiple sentences with different sources, cite each sentence.
 
 Output format (exact):
@@ -139,4 +140,5 @@ class StrictRAG:
             best_score=best_score,
             passed_threshold=passed,
             retrieved=chunks,
+
 )

@@ -48,7 +48,7 @@ This ensures:
 -No hallucinations
 -Full traceability and trust
 
-***Phase 2 Motivation — When RAG Is Not Enough***
+***Phase 2 Motivation - When RAG Is Not Enough***
 
 While strict RAG is ideal for syllabus-bound learning, it can sometimes be too restrictive when:
 -Users want higher-level reasoning
@@ -57,7 +57,7 @@ While strict RAG is ideal for syllabus-bound learning, it can sometimes be too r
 
 This leads to the motivation for Phase 2.
 
-***Phase 2 — LLM Council Fallback (Planned)***
+***Phase 2 - LLM Council Fallback (Planned)***
 
 Phase 2 introduces a controlled fallback mechanism inspired by Andrej Karpathy’s LLM Council concept.
 
@@ -80,13 +80,13 @@ This creates:
 
 All inference in Phase 2 is planned to run on a local GPU for faster latency.
 
-**🎯 Summary**
-Aspect	                Normal LLM	      This Project
-Out-of-syllabus answers	❌ Common	      ✅ Prevented
-Hallucinations	        ❌ Frequent	    ✅ Blocked
-Citations	              ❌ None	          ✅ Mandatory
-Trustworthiness	        ❌ Low	          ✅ High
-Advanced reasoning	    ⚠️ Uncontrolled	✅ Phase 2 Council
+| Aspect                  | Normal LLM        | This Project        |
+| ----------------------- | ----------------- | -----------------   |
+| Out-of-syllabus answers | ❌ Common        | ✅ Prevented        |
+| Hallucinations          | ❌ Frequent      | ✅ Blocked          |
+| Citations               | ❌ None          | ✅ Mandatory        |
+| Trustworthiness         | ❌ Low           | ✅ High             |
+| Advanced reasoning      | ⚠️ Uncontrolled  | ✅ Phase 2 Council  |
 
 **Why This Matters**
 
@@ -96,4 +96,5 @@ Advanced reasoning	    ⚠️ Uncontrolled	✅ Phase 2 Council
 -Research assistants
 -Regulated environments
 -Trust-first AI applications
+
 
